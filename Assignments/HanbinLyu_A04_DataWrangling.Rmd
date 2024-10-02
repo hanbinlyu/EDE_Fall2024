@@ -86,10 +86,14 @@ mdy(PM25_2019$Date)
 
 #4
 #select columns
-select(O3_2018, Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
-select(O3_2019, Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
-select(PM25_2018, Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
-select(PM25_2019, Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
+select(O3_2018, Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, 
+       SITE_LATITUDE, SITE_LONGITUDE)
+select(O3_2019, Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, 
+       SITE_LATITUDE, SITE_LONGITUDE)
+select(PM25_2018, Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, 
+       SITE_LATITUDE, SITE_LONGITUDE)
+select(PM25_2019, Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, 
+       SITE_LATITUDE, SITE_LONGITUDE)
 
 #5
 #fill all cells in AQS_PARAMETER_DESC with "PM2.5"
@@ -98,20 +102,24 @@ PM25_2019$AQS_PARAMETER_DESC = "PM2.5"
 
 #combine codes in questions 3, 4, and 5 together
 p318 = O3_2018 %>%
-  select(Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE) %>%
+  select(Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, 
+         SITE_LATITUDE, SITE_LONGITUDE) %>%
   mutate(Date = mdy(Date))
 
 p319 = O3_2019 %>%
-  select(Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE) %>%
+  select(Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, 
+         SITE_LATITUDE, SITE_LONGITUDE) %>%
   mutate(Date = mdy(Date))
 
 p2518 = PM25_2018 %>%
-  select(Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE) %>%
+  select(Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, 
+         SITE_LATITUDE, SITE_LONGITUDE) %>%
   mutate(Date = mdy(Date)) %>%
   mutate(AQS_PARAMETER_DESC = "PM2.5")
 
 p2519 = PM25_2019 %>%
-  select(Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE) %>%
+  select(Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, 
+         SITE_LATITUDE, SITE_LONGITUDE) %>%
   mutate(Date = mdy(Date)) %>%
   mutate(AQS_PARAMETER_DESC = "PM2.5")
 
@@ -159,7 +167,13 @@ cpds = rbind(p318, p319,p2518,p2519)
 #8 
 #wrangle the data set
 wtds = cpds %>%
-  filter(Site.Name == "Linville Falls" | Site.Name == "Durham Armory" | Site.Name == "Leggett" | Site.Name == "Hattie Avenue" | Site.Name == "Clemmons Middle" | Site.Name == "Mendenhall School" | Site.Name == "Frying Pan Mountain" | Site.Name == "West Johnston Co." | Site.Name == "Garinger High School" | Site.Name == "Castle Hayne" | Site.Name == "Pitt Agri. Center" | Site.Name == "Bryson City" | Site.Name == "Millbrook School") %>%
+  filter(Site.Name == "Linville Falls" | Site.Name == "Durham Armory" | 
+           Site.Name == "Leggett" | Site.Name == "Hattie Avenue" | 
+           Site.Name == "Clemmons Middle" | Site.Name == "Mendenhall School" | 
+           Site.Name == "Frying Pan Mountain" | Site.Name == "West Johnston Co."| 
+           Site.Name == "Garinger High School" | Site.Name == "Castle Hayne" | 
+           Site.Name == "Pitt Agri. Center" | Site.Name == "Bryson City" | 
+           Site.Name == "Millbrook School") %>%
   group_by(Date, Site.Name, AQS_PARAMETER_DESC, COUNTY) %>%
   summarize(DAILY_AQI_MEAN = mean(DAILY_AQI_VALUE),
     SITE_LATITUDE_MEAN = mean(SITE_LATITUDE),
